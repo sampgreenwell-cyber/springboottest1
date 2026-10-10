@@ -20,6 +20,11 @@ param keyVaultSecretNames = [
 param appSettings = []
 param exposeViaApim = true
 param apimName = 'apim-samgp-lab'
+// Caller check at APIM (off until the app registrations exist): when true, only an Entra ID token
+// for jwtAudience issued to allowedCallerClientId (e.g. the BFF) gets through; 401/403 otherwise.
+param requireCallerToken = false
+param jwtAudience = ''
+param allowedCallerClientId = ''
 param minReplicas = 1
 param maxReplicas = 3
 param ddEnv = 'lab-dev'

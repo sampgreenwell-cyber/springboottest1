@@ -52,6 +52,18 @@ param exposeViaApim bool = true
 @description('Existing APIM service name in this resource group')
 param apimName string
 
+@description('Appended to the APIM API name, path and backend. Only for environments that share one APIM (e.g. a lab), so qa does not overwrite dev\'s API.')
+param apimApiSuffix string = ''
+
+@description('APIM only lets through callers with an Entra ID token for jwtAudience issued to allowedCallerClientId: 401 without a valid token, 403 for any other app. Same as applyCoreAuthorization on the CLX core-api.')
+param requireCallerToken bool = false
+
+@description('Token audience when requireCallerToken=true: this service\'s app registration (application ID URI or client ID)')
+param jwtAudience string = ''
+
+@description('Client ID of the one app allowed to call (appid/azp claim), e.g. the BFF, when requireCallerToken=true')
+param allowedCallerClientId string = ''
+
 @description('Application port (keep in sync with server.port in application.yml)')
 param targetPort int = 8080
 
@@ -153,11 +165,15 @@ module api 'modules/apim-api.bicep' = if (exposeViaApim) {
   name: '${serviceName}-apim'
   params: {
     apimName: apimName
-    name: serviceName
+    name: '${serviceName}${apimApiSuffix}'
     backendUrl: 'https://${app.outputs.fqdn}'
+    enableJwtValidation: requireCallerToken
+    tenantId: tenant().tenantId
+    jwtAudience: jwtAudience
+    allowedCallerClientId: allowedCallerClientId
   }
 }
 
 output containerAppName string = app.outputs.containerAppName
 output containerAppFqdn string = app.outputs.fqdn
-output publicBaseUrl string = exposeViaApim ? '${apim!.properties.gatewayUrl}/${serviceName}' : ''
+output publicBaseUrl string = exposeViaApim ? '${apim!.properties.gatewayUrl}/${serviceName}${apimApiSuffix}' : ''
