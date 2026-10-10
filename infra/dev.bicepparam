@@ -18,7 +18,7 @@ param keyVaultSecretNames = [
   'dd-api-key'
 ]
 param appSettings = []
-param exposeViaApim = true
+param exposeViaApim = false
 param apimName = 'apim-samgp-lab'
 param minReplicas = 1
 param maxReplicas = 3
