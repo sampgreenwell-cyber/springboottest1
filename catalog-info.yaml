@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: springboot1
+  description: "A Spring Boot service on CLX Container Apps"
+  annotations:
+    github.com/project-slug: sampgreenwell-cyber/springboottest1
+    backstage.io/source-location: url:https://github.com/sampgreenwell-cyber/springboottest1
+  tags:
+    - java
+    - spring-boot
+    - container-apps
+  labels:
+    clx.platform/template: spring-container-app
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/guests
