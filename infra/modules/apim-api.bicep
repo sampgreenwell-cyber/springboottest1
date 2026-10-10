@@ -174,6 +174,8 @@ var generatedPolicy = concat(
   '</policies>'
 )
 
+// After the operations too: APIM rejects concurrent writes to one API, so a policy written
+// alongside the operations of a new API can fail with PreconditionFailed.
 resource apiPolicy 'Microsoft.ApiManagement/service/apis/policies@2022-08-01' = {
   name: 'policy'
   parent: apiRef
@@ -184,6 +186,7 @@ resource apiPolicy 'Microsoft.ApiManagement/service/apis/policies@2022-08-01' = 
   dependsOn: [
     api
     backend
+    wildcardOperations
   ]
 }
 
